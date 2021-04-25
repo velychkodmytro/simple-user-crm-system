@@ -1,10 +1,10 @@
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuid } from 'uuid'
 import { resolve } from 'path'
 import { readFile, open, writeFile, unlink, access, mkdir } from 'fs/promises'
 
-type UserInfoType = { name: string; age: number }
+import { UserInfoType } from './types/user_type'
 
-export const createFolderIfNotExist = async function (path: string) {
+export async function createFolderIfNotExist(path: string) {
   const pathToDIr: string = resolve(path)
   try {
     await access(pathToDIr)
@@ -14,11 +14,11 @@ export const createFolderIfNotExist = async function (path: string) {
   }
 }
 
-export const createContent = async function (
+export async function createContent(
   path: string,
   fileName: string,
   content: UserInfoType
-) {
+): Promise<void> {
   const takePath: string = resolve(path, fileName)
 
   try {
@@ -31,7 +31,7 @@ export const createContent = async function (
   }
 }
 
-export const getContent = async function (path: string, fileName: string) {
+export async function getContent(path: string, fileName: string) {
   const filePath: string = resolve(path, `${fileName}`)
 
   try {
@@ -42,7 +42,7 @@ export const getContent = async function (path: string, fileName: string) {
   }
 }
 
-export const deleteContent = async function (path: string, fileName: string) {
+export async function deleteContent(path: string, fileName: string) {
   const takePath: string = resolve(path, fileName)
 
   try {

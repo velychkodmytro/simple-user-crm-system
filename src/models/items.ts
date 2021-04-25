@@ -1,8 +1,5 @@
-import * as fs from 'fs'
 import { v4 as uuidv4 } from 'uuid'
-//import user from '../models/user'
 
-//НЕ ИСПОЛЬЗУЮ НИГДЕ
 export default class Item {
   id: string
   text: string

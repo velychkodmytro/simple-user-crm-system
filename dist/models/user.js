@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const uuid_1 = require("uuid");
-//НЕ ИСПОЛЬЗУЮ НИГДЕ
 class User {
     constructor(id, name, age) {
         this.id = id;

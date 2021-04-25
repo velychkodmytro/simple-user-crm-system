@@ -1,7 +1,5 @@
-import * as fs from 'fs'
 import { v4 as uuidv4 } from 'uuid'
 
-//НЕ ИСПОЛЬЗУЮ НИГДЕ
 export default class User {
   id: string
   name: string
