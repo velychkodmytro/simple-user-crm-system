@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "start": "node ./dist/src/adapter.js"
+    "start": "node ./dist/adapter.js"
   },
   "keywords": [],
   "author": "",
