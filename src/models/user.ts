@@ -1,4 +1,8 @@
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuid } from 'uuid'
+
+import adapter from '../adapter'
+
+const userAdapter = new adapter('./routes/user/', 'user.json')
 
 export default class User {
   id: string
@@ -10,8 +14,12 @@ export default class User {
     this.name = name
     this.age = age
   }
+
+  async createUser(): Promise<void> {
+    await userAdapter.init()
+  }
 }
 
-let a: number
-const user: User = new User(uuidv4(), 'Dima', 20)
+const user: User = new User(uuid(), 'Dima', 20)
 console.log(user)
+user.createUser()

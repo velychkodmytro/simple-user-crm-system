@@ -1,14 +1,15 @@
 import { v4 as uuid } from 'uuid'
 import {
-  createFolderIfNotExist,
   createContent,
   getContent,
+  createFolderIfNotExists,
   deleteContent,
+  createFileIfNotExists,
 } from './workingWithData'
 
 import { UserInfoType } from './types/user_type'
 
-class WorkingWithData {
+export default class Adapter {
   private readonly pathToFile: string
   private readonly fileName: string
 
@@ -17,12 +18,12 @@ class WorkingWithData {
     this.fileName = fileName
   }
 
-  async init(data: UserInfoType): Promise<void> {
-    await createFolderIfNotExist(this.pathToFile)
-    await createContent(this.pathToFile, this.fileName, data)
+  async init(): Promise<void> {
+    await createFolderIfNotExists(this.pathToFile)
+    await createFileIfNotExists(this.pathToFile, this.fileName)
   }
 
-  async create(data: UserInfoType): Promise<string> {
+  async createData(data: UserInfoType): Promise<string> {
     const id = uuid()
     await createContent(this.pathToFile, this.fileName, data)
     return id
@@ -35,12 +36,11 @@ class WorkingWithData {
   async delete(path: string, nameOfFile: string): Promise<void> {
     await deleteContent(path, nameOfFile)
   }
-  async delte() {}
 }
 
-const user = new WorkingWithData('./routes/qwe', 'user.json')
+const user = new Adapter('./routes/qwe', 'user.json')
 
-user.init({ name: 'Dima', age: 20 })
-user.create({ name: 'Alex', age: 30 })
+user.init()
+user.createData({ name: 'Alex', age: 30 })
 user.get()
 user.delete('./routes/qwe', 'user.json')

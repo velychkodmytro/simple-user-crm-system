@@ -1,16 +1,27 @@
-import { v4 as uuid } from 'uuid'
 import { resolve } from 'path'
 import { readFile, open, writeFile, unlink, access, mkdir } from 'fs/promises'
-
 import { UserInfoType } from './types/user_type'
 
-export async function createFolderIfNotExist(path: string) {
+export async function createFolderIfNotExists(path: string): Promise<void> {
   const pathToDIr: string = resolve(path)
   try {
     await access(pathToDIr)
   } catch (error) {
     await mkdir(pathToDIr)
     console.log('The dir has been created')
+  }
+}
+
+export async function createFileIfNotExists(
+  path: string,
+  fileName: string
+): Promise<void> {
+  const takePath: string = resolve(path, fileName)
+  try {
+    await access(takePath)
+  } catch (error) {
+    await open(takePath, 'a+')
+    console.log('File has been created')
   }
 }
 
@@ -22,12 +33,10 @@ export async function createContent(
   const takePath: string = resolve(path, fileName)
 
   try {
-    await access(takePath)
     await writeFile(takePath, JSON.stringify(content))
     console.log('Content has been added')
   } catch (error) {
-    await open(takePath, 'a+')
-    console.log('File was created')
+    throw new Error(error)
   }
 }
 
@@ -39,10 +48,9 @@ export async function getContent(
 
   try {
     const fileContent: string = await readFile(filePath, 'utf-8')
-    console.log(fileContent)
     return fileContent
   } catch (error) {
-    console.log(error)
+    throw new Error(error)
   }
 }
 
