@@ -31,12 +31,16 @@ export async function createContent(
   }
 }
 
-export async function getContent(path: string, fileName: string) {
+export async function getContent(
+  path: string,
+  fileName: string
+): Promise<string | undefined> {
   const filePath: string = resolve(path, `${fileName}`)
 
   try {
     const fileContent: string = await readFile(filePath, 'utf-8')
     console.log(fileContent)
+    return fileContent
   } catch (error) {
     console.log(error)
   }

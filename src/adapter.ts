@@ -35,11 +35,12 @@ class WorkingWithData {
   async delete(path: string, nameOfFile: string): Promise<void> {
     await deleteContent(path, nameOfFile)
   }
+  async delte() {}
 }
 
-const user = new WorkingWithData('./routes/user111', 'user.json')
+const user = new WorkingWithData('./routes/qwe', 'user.json')
 
 user.init({ name: 'Dima', age: 20 })
 user.create({ name: 'Alex', age: 30 })
 user.get()
-//user.delete('./routes/dfaf', 'user.json')
+user.delete('./routes/qwe', 'user.json')

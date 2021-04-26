@@ -23,9 +23,9 @@ class WorkingWithData {
         await workingWithData_1.deleteContent(path, nameOfFile);
     }
 }
-const user = new WorkingWithData('./routes/user111', 'user.json');
-user.init({ name: 'Dima', age: 20 });
-user.create({ name: 'Alex', age: 30 });
+const user = new WorkingWithData('./routes/qwe', 'user.json');
+//user.init({ name: 'Dima', age: 20 })
+//user.create({ name: 'Alex', age: 30 })
 user.get();
-//user.delete('./routes/dfaf', 'user.json')
+user.delete('./routes/qwe', 'user.json');
 //# sourceMappingURL=adapter.js.map
