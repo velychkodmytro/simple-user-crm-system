@@ -36,7 +36,7 @@ export async function createContent(
     await writeFile(takePath, JSON.stringify(content))
     console.log('Content has been added')
   } catch (error) {
-    throw new Error(error)
+    console.log('No such file')
   }
 }
 

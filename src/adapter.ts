@@ -38,9 +38,9 @@ export default class Adapter {
   }
 }
 
-const user = new Adapter('./routes/qwe', 'user.json')
+const user = new Adapter('./routes/sfqweqweasfa', 'user.json')
 
 user.init()
 user.createData({ name: 'Alex', age: 30 })
-user.get()
-user.delete('./routes/qwe', 'user.json')
+//user.get()
+//user.delete('./routes/qwe', 'user.json')
