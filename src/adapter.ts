@@ -7,7 +7,7 @@ import {
   createFileIfNotExists,
 } from './workingWithData'
 
-import { UserInfoType } from './types/user_type'
+import { UserInfoType } from './types/userType'
 
 export default class Adapter {
   private readonly pathToFile: string
@@ -23,14 +23,29 @@ export default class Adapter {
     await createFileIfNotExists(this.pathToFile, this.fileName)
   }
 
-  async createData(data: UserInfoType): Promise<string> {
-    const id = uuid()
+  async createData(data: UserInfoType): Promise<void> {
     await createContent(this.pathToFile, this.fileName, data)
-    return id
   }
 
   async get(): Promise<void> {
     await getContent(this.pathToFile, this.fileName)
+  }
+
+  async getById(
+    file: string,
+    id: string
+  ): Promise<UserInfoType[] | Record<string, never>> {
+    const fileContent: string | undefined = await getContent(
+      this.pathToFile,
+      file
+    )
+    if (!fileContent) {
+      return {}
+    }
+    const entity: UserInfoType[] = JSON.parse(fileContent)
+    return entity.find((ent) => ent.id === id)
+
+    // return entity.find((ent: UserInfoType) => ent.id === id)
   }
 
   async delete(path: string, nameOfFile: string): Promise<void> {
@@ -38,9 +53,9 @@ export default class Adapter {
   }
 }
 
-const user = new Adapter('./routes/sfqweqweasfa', 'user.json')
+const user = new Adapter('./routes/123', 'user.json')
 
-user.init()
-user.createData({ name: 'Alex', age: 30 })
+//user.init()
+//user.createData({ name: 'Sasha', age: 45, id: uuid() })
 //user.get()
-//user.delete('./routes/qwe', 'user.json')
+// user.delete('./routes/qwe', 'user.json')

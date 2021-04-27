@@ -1,25 +1,34 @@
-// import { v4 as uuid } from 'uuid'
+import { UserInfoType } from './../types/userType'
+import { v4 as uuid } from 'uuid'
 
-// import adapter from '../adapter'
+import adapter from '../adapter'
 
-// const userAdapter = new adapter('./routes/user/', 'user.json')
+const userAdapter = new adapter('./routes/user/', 'user111.json')
 
-// export default class User {
-//   id: string
-//   name: string
-//   age: number
+export default class User {
+  async createUser(): Promise<void> {
+    await userAdapter.init()
+  }
+  async createUserData(data: UserInfoType): Promise<void> {
+    await userAdapter.createData(data)
+  }
 
-//   constructor(id: string, name: string, age: number) {
-//     this.id = id
-//     this.name = name
-//     this.age = age
-//   }
+  async getData(): Promise<void> {
+    await userAdapter.get()
+  }
+  async getUserById(file: string, id: string): Promise<void> {
+    await userAdapter.getById(file, id)
+  }
 
-//   async createUser(): Promise<void> {
-//     await userAdapter.init()
-//   }
-// }
+  async deleteUser(path: string, nameOfFile: string): Promise<void> {
+    await userAdapter.delete(path, nameOfFile)
+  }
+}
 
-// const user: User = new User(uuid(), 'Dima', 20)
+const user: User = new User()
 
-// user.createUser()
+//user.createUser()
+//user.createUserData({ name: 'Kirill', age: 24, id: uuid() })
+//user.getData()
+user.getUserById('user111.json', 'd9a4e487-8605-4cb8-a9ec-d751e796f22e')
+//user.deleteUser('./routes/user/', 'user111.json')

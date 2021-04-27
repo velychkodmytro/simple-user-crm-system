@@ -1,11 +1,12 @@
 import { resolve } from 'path'
 import { readFile, open, writeFile, unlink, access, mkdir } from 'fs/promises'
-import { UserInfoType } from './types/user_type'
+import { UserInfoType } from './types/userType'
 
 export async function createFolderIfNotExists(path: string): Promise<void> {
   const pathToDIr: string = resolve(path)
   try {
     await access(pathToDIr)
+    console.log('The dir is almost exists')
   } catch (error) {
     await mkdir(pathToDIr)
     console.log('The dir has been created')
@@ -19,6 +20,7 @@ export async function createFileIfNotExists(
   const takePath: string = resolve(path, fileName)
   try {
     await access(takePath)
+    console.log('The file is almost exists')
   } catch (error) {
     await open(takePath, 'a+')
     console.log('File has been created')
@@ -48,9 +50,10 @@ export async function getContent(
 
   try {
     const fileContent: string = await readFile(filePath, 'utf-8')
+    console.log(fileContent)
     return fileContent
   } catch (error) {
-    throw new Error(error)
+    console.log(error)
   }
 }
 
