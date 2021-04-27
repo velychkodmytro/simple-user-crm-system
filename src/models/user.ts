@@ -3,10 +3,10 @@ import { v4 as uuid } from 'uuid'
 
 import adapter from '../adapter'
 
-const userAdapter = new adapter('./routes/user/', 'user111.json')
+const userAdapter = new adapter('./routes/user', 'user.json')
 
 export default class User {
-  async createUser(): Promise<void> {
+  async createUserFile(): Promise<void> {
     await userAdapter.init()
   }
   async createUserData(data: UserInfoType): Promise<void> {
@@ -25,10 +25,10 @@ export default class User {
   }
 }
 
-const user: User = new User()
+//const user: User = new User()
 
-//user.createUser()
+//user.createUserFile()
 //user.createUserData({ name: 'Kirill', age: 24, id: uuid() })
 //user.getData()
-user.getUserById('user111.json', 'd9a4e487-8605-4cb8-a9ec-d751e796f22e')
+//user.getUserById('user111.json', 'd9a4e487-8605-4cb8-a9ec-d751e796f22e')
 //user.deleteUser('./routes/user/', 'user111.json')
