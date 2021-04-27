@@ -35,7 +35,7 @@ export async function createContent(
   const takePath: string = resolve(path, fileName)
 
   try {
-    await writeFile(takePath, JSON.stringify(content))
+    await writeFile(takePath, JSON.stringify(content), { flag: 'a' })
     console.log('Content has been added')
   } catch (error) {
     console.log('No such file')
