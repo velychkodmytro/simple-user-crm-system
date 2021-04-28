@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid'
+import { createDataRequest } from './types/dataRequest'
 import {
   createContent,
   getContent,
@@ -23,25 +24,32 @@ export default class Adapter {
     await createFileIfNotExists(this.pathToFile, this.fileName)
   }
 
-  async createData(data: UserInfoType): Promise<void> {
-    await createContent(this.pathToFile, this.fileName, data)
+  async createData(content: UserInfoType): Promise<void> {
+    const fileContent = await getContent(this.pathToFile, this.fileName)
+    await createContent(
+      this.pathToFile,
+      this.fileName,
+      JSON.stringify([content, ...fileContent!])
+    )
+    //return content
   }
 
   async get(): Promise<void> {
     await getContent(this.pathToFile, this.fileName)
   }
 
-  async getById(file: string, id: string): Promise<UserInfoType | undefined> {
-    const fileContent: string | undefined = await getContent(
-      this.pathToFile,
-      file
-    )
+  async getById(
+    path: string,
+    file: string,
+    id: string
+  ): Promise<UserInfoType | undefined> {
+    const fileContent: string | undefined = await getContent(path, file)
     if (!fileContent) {
       return
     }
     const entity: UserInfoType[] = JSON.parse(fileContent)
-    //console.log(entity)
-    //return entity.find((ent) => ent.id === id)
+    console.log(entity)
+    return entity.find((ent) => ent.id === id)
   }
 
   async delete(path: string, nameOfFile: string): Promise<void> {
@@ -49,9 +57,14 @@ export default class Adapter {
   }
 }
 
-const entity = new Adapter('./routes/123', 'user.json')
+const entity = new Adapter('./routes/user', 'user.json')
 //entity.init()
-//entity.createData({ name: 'Sasha', age: 45, id: uuid() })
+entity.createData({ name: 'Dima', age: 45, id: uuid() })
 //entity.get()
-//entity.getById('user.json', 'bce2b50a-3637-49bf-a94a-cafb269693bd')
+// entity.getById(
+//   './routes/user',
+//   'user.json',
+//   'be6d8b6d-da28-4439-b40d-9d20e3ee47c1'
+// )
+
 // entity.delete('./routes/qwe', 'user.json')

@@ -11,13 +11,14 @@ export default class User {
   }
   async createUserData(data: UserInfoType): Promise<void> {
     await userAdapter.createData(data)
+    await userAdapter.get()
   }
 
   async getData(): Promise<void> {
     await userAdapter.get()
   }
-  async getUserById(file: string, id: string): Promise<void> {
-    await userAdapter.getById(file, id)
+  async getUserById(path: string, file: string, id: string): Promise<void> {
+    await userAdapter.getById(path, file, id)
   }
 
   async deleteUser(path: string, nameOfFile: string): Promise<void> {
@@ -25,10 +26,14 @@ export default class User {
   }
 }
 
-//const user: User = new User()
+const user: User = new User()
 
 //user.createUserFile()
 //user.createUserData({ name: 'Kirill', age: 24, id: uuid() })
 //user.getData()
-//user.getUserById('user111.json', 'd9a4e487-8605-4cb8-a9ec-d751e796f22e')
+user.getUserById(
+  './routes/user/',
+  'user111.json',
+  'd9a4e487-8605-4cb8-a9ec-d751e796f22e'
+)
 //user.deleteUser('./routes/user/', 'user111.json')

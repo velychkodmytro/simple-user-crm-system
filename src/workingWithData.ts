@@ -1,6 +1,8 @@
 import { resolve } from 'path'
 import { readFile, open, writeFile, unlink, access, mkdir } from 'fs/promises'
 import { UserInfoType } from './types/userType'
+import { v4 as uuid } from 'uuid'
+import { createDataRequest } from './types/dataRequest'
 
 export async function createFolderIfNotExists(path: string): Promise<void> {
   const pathToDIr: string = resolve(path)
@@ -22,7 +24,7 @@ export async function createFileIfNotExists(
     await access(takePath)
     console.log('The file is almost exists')
   } catch (error) {
-    await open(takePath, 'a+')
+    await open(takePath, 'w+')
     console.log('File has been created')
   }
 }
@@ -30,12 +32,14 @@ export async function createFileIfNotExists(
 export async function createContent(
   path: string,
   fileName: string,
-  content: UserInfoType
+  content: string
 ): Promise<void> {
   const takePath: string = resolve(path, fileName)
 
   try {
-    await writeFile(takePath, JSON.stringify(content), { flag: 'a' })
+    //  await writeFile(takePath, JSON.stringify(content), { flag: 'a' })
+
+    await writeFile(takePath, Object(content))
     console.log('Content has been added')
   } catch (error) {
     console.log('No such file')
@@ -50,7 +54,6 @@ export async function getContent(
 
   try {
     const fileContent: string = await readFile(filePath, 'utf-8')
-    console.log(fileContent)
     return fileContent
   } catch (error) {
     console.log(error)

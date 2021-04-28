@@ -20,9 +20,10 @@ router.post('/user/createUserFile', async (req: Request, res: Response) => {
 })
 router.post('/user/createData', async (req: Request, res: Response) => {
   try {
-    await user.createUserData(req.body)
+    const obj = { name: req.body.name, age: req.body.age, id: uuid() }
+    //await user.createUserData(obj)
 
-    res.status(200).send({ user })
+    res.status(200).send({ message: 'Success' })
   } catch (error) {
     res.status(422).send(error)
   }
