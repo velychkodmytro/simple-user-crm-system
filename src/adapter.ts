@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid'
-import { createDataRequest } from './types/dataRequest'
 import {
   createContent,
   getContent,
@@ -24,14 +23,15 @@ export default class Adapter {
     await createFileIfNotExists(this.pathToFile, this.fileName)
   }
 
-  async createData(content: UserInfoType): Promise<void> {
+  async createData(content: UserInfoType): Promise<UserInfoType> {
     const fileContent = await getContent(this.pathToFile, this.fileName)
+
     await createContent(
       this.pathToFile,
       this.fileName,
       JSON.stringify([content, ...fileContent!])
     )
-    //return content
+    return content
   }
 
   async get(): Promise<void> {
@@ -57,9 +57,12 @@ export default class Adapter {
   }
 }
 
-const entity = new Adapter('./routes/user', 'user.json')
-//entity.init()
+const entity = new Adapter('./routes/qwe', 'user.json')
+
+entity.init()
+
 entity.createData({ name: 'Dima', age: 45, id: uuid() })
+
 //entity.get()
 // entity.getById(
 //   './routes/user',
