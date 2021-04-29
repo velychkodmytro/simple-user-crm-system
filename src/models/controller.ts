@@ -1,56 +1,94 @@
-// export const signupUser = async (req, res) => {
-//     try {
-//       const user = req.body;
+import express from 'express'
+const router = express.Router()
+import { v4 as uuid } from 'uuid'
+import { Request, Response, NextFunction } from 'express'
+import UserService from '../models/user'
 
-//       await userService.createUser(user);
+interface RequestBody {
+  name: string
+  age: number
+  id: string
+  path: string
+  nameOfFile: string
+}
 
-//       res.end(STATUS_CODES[201]);
-//     } catch (err) {
-//       res.end(STATUS_CODES[404]);
-//     }
-//   };
+let user: UserService = new UserService()
 
-//   export const getUser = async (req, res) => {
-//     try {
-//       const { id } = req.params;
-//       const user = await userService.findUserById(id);
+export const initializeUser = async (
+  req: Request<{}, {}, RequestBody, {}>,
+  res: Response
+) => {
+  try {
+    await user.init()
+    const { nameOfFile } = req.body
+    if (nameOfFile) {
+      res.status(200).send({ message: 'Dir/file is already exists' })
+    }
+    res.status(200).send({ message: 'Dir/file has been successfuly created' })
+  } catch (error) {
+    res.status(422).send({ error })
+  }
+}
+export const createUser = async (
+  req: Request<{}, {}, RequestBody, {}>,
+  res: Response
+) => {
+  try {
+    const { name, age } = req.body
+    const id = uuid()
+    await user.create({ name, age, id })
+    res.status(200).send({ message: `User was successfuly created ` })
+  } catch (error) {
+    res.status(422).send({ error })
+  }
+}
 
-//       res.end(JSON.stringify(user));
-//     } catch (err) {
-//       res.end(STATUS_CODES[404]);
-//     }
-//   };
+export const getAllUsers = async (
+  req: Request<{}, {}, RequestBody, {}>,
+  res: Response
+) => {
+  try {
+    const users = await user.findAll()
+    res.status(200).send(users)
+  } catch (error) {
+    res.status(402).send({ error })
+  }
+}
 
-//   export const listUsers = async (req, res) => {
-//     try {
-//       const users = await userService.findAllUsers();
+export const deleteUserFile = async (
+  req: Request<{}, {}, RequestBody, {}>,
+  res: Response
+) => {
+  try {
+    await user.deleteUserFile()
+    res.status(200).send({ message: `File  was successfuly deleted` })
+  } catch (error) {
+    res.status(402).send({ error })
+  }
+}
+export const deleteUserById = async (
+  req: Request<{}, {}, RequestBody, {}>,
+  res: Response
+) => {
+  try {
+    const { id } = req.body
+    await user.deleteUserById(id)
+    res.status(200).send({ message: `User  was successfuly deleted` })
+  } catch (error) {
+    res.status(402).send({ error })
+  }
+}
 
-//       res.end(JSON.stringify(users));
-//     } catch (err) {
-//       res.end(STATUS_CODES[404]);
-//     }
-//   };
+export const updateUser = async (
+  req: Request<{}, {}, RequestBody, {}>,
+  res: Response
+) => {
+  try {
+    const { name, age, id } = req.body
+    await user.updateUserById({ name, age }, id)
 
-//   export const updateUser = async (req, res) => {
-//     try {
-//       const { id } = req.params;
-//       const newUser = req.body;
-
-//       const updatedUser = await userService.updateUserById(id, newUser);
-
-//       res.end(JSON.stringify(updatedUser));
-//     } catch (err) {
-//       res.end(STATUS_CODES[404]);
-//     }
-//   };
-
-//   export const deleteUser = async (req, res) => {
-//     try {
-//       const { id } = req.params;
-
-//       await userService.deleteUserById(id);
-//       res.end(STATUS_CODES[200]);
-//     } catch (err) {
-//       res.end(STATUS_CODES[404]);
-//     }
-//   };
+    res.status(200).send({ message: `User  was successfuly deleted` })
+  } catch (error) {
+    res.status(402).send({ error })
+  }
+}

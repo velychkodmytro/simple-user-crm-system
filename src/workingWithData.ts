@@ -1,7 +1,6 @@
 import { UserInfoType } from './types/userType'
 import { resolve } from 'path'
 import { readFile, open, writeFile, unlink, access, mkdir } from 'fs/promises'
-import { RecordWithTtl } from 'node:dns'
 
 export async function createFolderIfDoesNotExists(path: string): Promise<void> {
   const pathToDIr: string = resolve(path)
@@ -37,11 +36,9 @@ export async function createContent(
 
   try {
     await writeFile(takePath, content)
-
-    console.log('Content has been added')
     return content
   } catch (error) {
-    console.log('No such file')
+    throw new Error(error)
   }
 }
 
@@ -56,7 +53,7 @@ export async function getData(
     console.log(fileContent)
     return JSON.parse(fileContent)
   } catch (error) {
-    console.log(error)
+    throw new Error(error)
   }
 }
 
@@ -65,8 +62,11 @@ export async function deleteContent(path: string, fileName: string) {
 
   try {
     await unlink(takePath)
-    console.log('File was deleted')
-  } catch (error) {
+    if (!takePath) {
+      console.log('File was deleted')
+    }
     console.log('File doesnt exists')
+  } catch (error) {
+    throw new Error(error)
   }
 }

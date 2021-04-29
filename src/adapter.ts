@@ -6,7 +6,7 @@ import {
   deleteContent,
   createFileIfDoesNotExists,
 } from './workingWithData'
-
+import { userUpdate } from './types/userUpdate'
 import { UserInfoType } from './types/userType'
 
 export default class Adapter {
@@ -29,13 +29,13 @@ export default class Adapter {
     await createContent(
       this.pathToFile,
       this.fileName,
-      JSON.stringify([content, ...fileContent!])
+      JSON.stringify([...fileContent!, content])
     )
     return id
   }
 
-  async getFileContent(): Promise<void> {
-    await getData(this.pathToFile, this.fileName)
+  async getFileContent(): Promise<UserInfoType[] | undefined> {
+    return await getData(this.pathToFile, this.fileName)
   }
 
   async getById(id: string): Promise<UserInfoType | undefined> {
@@ -52,7 +52,7 @@ export default class Adapter {
   }
 
   async updateEntityById(
-    newData: object,
+    newData: userUpdate,
     id: string
   ): Promise<UserInfoType | undefined> {
     const fileContent = await getData(this.pathToFile, this.fileName)
@@ -76,8 +76,8 @@ export default class Adapter {
     return { ...newData, id }
   }
 
-  async delete(path: string, nameOfFile: string): Promise<void> {
-    await deleteContent(path, nameOfFile)
+  async deleteFile(): Promise<void> {
+    await deleteContent(this.pathToFile, this.fileName)
   }
 
   async deleteById(id: string): Promise<UserInfoType | undefined> {
@@ -85,7 +85,7 @@ export default class Adapter {
     if (!fileContent) {
       return
     }
-    const newContent = fileContent.filter((ent) => ent.id === id)
+    const newContent = fileContent.filter((ent) => ent.id !== id)
 
     await createContent(
       this.pathToFile,
@@ -95,17 +95,4 @@ export default class Adapter {
   }
 }
 
-const entity = new Adapter('./routes/111', 'user.json')
-
-//entity.init()
-
-//entity.createData({ name: 'Dima', age: 45, id: uuid() })
-
-//entity.getFileContent()
-//entity.getById('55ed4942-6bd9-4894-8afe-b6fa88725339')
-entity.updateEntityById(
-  { name: 'Alex', age: 20, id: uuid() },
-  '3f54d8d8-17bf-4836-836a-2dc6665c2f6c'
-)
-//entity.deleteById('ace01b92-750d-4724-ad7f-f60c19e433a5')
-// entity.delete('./routes/qwe', 'user.json')
+const entity = new Adapter('./routes/qwe', 'user.json')

@@ -1,10 +1,9 @@
 import { UserInfoType } from './../types/userType'
-import { v4 as uuid } from 'uuid'
-
+import { userUpdate } from '../types/userUpdate'
 import adapter from '../adapter'
 
 export default class UserService {
-  userAdapter = new adapter('./routes/qwe', 'user.json')
+  userAdapter = new adapter('./routes/user', 'user.json')
 
   async init(): Promise<void> {
     await this.userAdapter.init()
@@ -14,22 +13,20 @@ export default class UserService {
     await this.userAdapter.getFileContent()
   }
 
-  async findAll(): Promise<void> {
-    await this.userAdapter.getFileContent()
+  async findAll(): Promise<UserInfoType[] | undefined> {
+    return await this.userAdapter.getFileContent()
   }
   async findOne(id: string): Promise<void> {
     await this.userAdapter.getById(id)
   }
 
-  async deleteUser(path: string, nameOfFile: string): Promise<void> {
-    await this.userAdapter.delete(path, nameOfFile)
+  async deleteUserFile(): Promise<void> {
+    await this.userAdapter.deleteFile()
+  }
+  async deleteUserById(id: string): Promise<void> {
+    await this.userAdapter.deleteById(id)
+  }
+  async updateUserById(data: userUpdate, id: string): Promise<void> {
+    await this.userAdapter.updateEntityById(data, id)
   }
 }
-
-const user: UserService = new UserService()
-
-user.init()
-user.create({ name: 'Kirill', age: 24, id: uuid() })
-user.findAll()
-user.findOne('d9a4e487-8605-4cb8-a9ec-d751e796f22e')
-user.deleteUser('./routes/user/', 'user111.json')
