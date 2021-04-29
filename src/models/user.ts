@@ -3,39 +3,33 @@ import { v4 as uuid } from 'uuid'
 
 import adapter from '../adapter'
 
-const userAdapter = new adapter('./routes/qwe', 'user.json')
+export default class UserService {
+  userAdapter = new adapter('./routes/qwe', 'user.json')
 
-export default class User {
-  async createUserFile(): Promise<void> {
-    await userAdapter.init()
+  async init(): Promise<void> {
+    await this.userAdapter.init()
   }
-  async createUserData(data: UserInfoType): Promise<void> {
-    await userAdapter.createData(data)
-    await userAdapter.get()
+  async create(data: UserInfoType): Promise<void> {
+    await this.userAdapter.createData(data)
+    await this.userAdapter.getFileContent()
   }
 
-  async getData(): Promise<void> {
-    await userAdapter.get()
+  async findAll(): Promise<void> {
+    await this.userAdapter.getFileContent()
   }
-  async getUserById(path: string, file: string, id: string): Promise<void> {
-    await userAdapter.getById(path, file, id)
+  async findOne(id: string): Promise<void> {
+    await this.userAdapter.getById(id)
   }
 
   async deleteUser(path: string, nameOfFile: string): Promise<void> {
-    await userAdapter.delete(path, nameOfFile)
+    await this.userAdapter.delete(path, nameOfFile)
   }
 }
 
-const user: User = new User()
+const user: UserService = new UserService()
 
-user.createUserFile()
-
-user.createUserData({ name: 'Kirill', age: 24, id: uuid() })
-
-//user.getData()
-// user.getUserById(
-//   './routes/user/',
-//   'user111.json',
-//   'd9a4e487-8605-4cb8-a9ec-d751e796f22e'
-// )
-//user.deleteUser('./routes/user/', 'user111.json')
+user.init()
+user.create({ name: 'Kirill', age: 24, id: uuid() })
+user.findAll()
+user.findOne('d9a4e487-8605-4cb8-a9ec-d751e796f22e')
+user.deleteUser('./routes/user/', 'user111.json')

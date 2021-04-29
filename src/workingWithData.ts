@@ -1,7 +1,9 @@
+import { UserInfoType } from './types/userType'
 import { resolve } from 'path'
 import { readFile, open, writeFile, unlink, access, mkdir } from 'fs/promises'
+import { RecordWithTtl } from 'node:dns'
 
-export async function createFolderIfNotExists(path: string): Promise<void> {
+export async function createFolderIfDoesNotExists(path: string): Promise<void> {
   const pathToDIr: string = resolve(path)
   try {
     await access(pathToDIr)
@@ -12,7 +14,7 @@ export async function createFolderIfNotExists(path: string): Promise<void> {
   }
 }
 
-export async function createFileIfNotExists(
+export async function createFileIfDoesNotExists(
   path: string,
   fileName: string
 ): Promise<void> {
@@ -43,14 +45,15 @@ export async function createContent(
   }
 }
 
-export async function getContent(
+export async function getData(
   path: string,
   fileName: string
-): Promise<string | undefined> {
+): Promise<UserInfoType[] | undefined> {
   const filePath: string = resolve(path, `${fileName}`)
 
   try {
     const fileContent: string = await readFile(filePath, 'utf-8')
+    console.log(fileContent)
     return JSON.parse(fileContent)
   } catch (error) {
     console.log(error)
