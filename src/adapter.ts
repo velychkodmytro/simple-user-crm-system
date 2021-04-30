@@ -1,12 +1,13 @@
-import { v4 as uuid } from 'uuid'
+import { CreateUserType } from './types/CreateUserType'
+import { PostInfoType } from './types/postType'
 import {
-  createContent,
+  addContentToFile,
   getData,
-  createFolderIfDoesNotExists,
+  createFolder,
   deleteContent,
-  createFileIfDoesNotExists,
+  createFile,
 } from './workingWithData'
-import { userUpdate } from './types/userUpdate'
+import { UserUpdate } from './types/userUpdate'
 import { UserInfoType } from './types/userType'
 
 export default class Adapter {
@@ -19,19 +20,20 @@ export default class Adapter {
   }
 
   async init(): Promise<void> {
-    await createFolderIfDoesNotExists(this.pathToFile)
-    await createFileIfDoesNotExists(this.pathToFile, this.fileName)
+    await createFolder(this.pathToFile)
+    await createFile(this.pathToFile, this.fileName)
   }
 
-  async createData(content: UserInfoType): Promise<string> {
+  async createData(
+    content: UserInfoType | PostInfoType | CreateUserType
+  ): Promise<void> {
     const fileContent = await getData(this.pathToFile, this.fileName)
-    const id: string = uuid()
-    await createContent(
+
+    await addContentToFile(
       this.pathToFile,
       this.fileName,
       JSON.stringify([...fileContent!, content])
     )
-    return id
   }
 
   async getFileContent(): Promise<UserInfoType[] | undefined> {
@@ -52,7 +54,7 @@ export default class Adapter {
   }
 
   async updateEntityById(
-    newData: userUpdate,
+    newData: UserUpdate,
     id: string
   ): Promise<UserInfoType | undefined> {
     const fileContent = await getData(this.pathToFile, this.fileName)
@@ -68,7 +70,7 @@ export default class Adapter {
       }
       return ent
     })
-    await createContent(
+    await addContentToFile(
       this.pathToFile,
       this.fileName,
       JSON.stringify(newContent)
@@ -87,12 +89,10 @@ export default class Adapter {
     }
     const newContent = fileContent.filter((ent) => ent.id !== id)
 
-    await createContent(
+    await addContentToFile(
       this.pathToFile,
       this.fileName,
       JSON.stringify(newContent)
     )
   }
 }
-
-const entity = new Adapter('./routes/qwe', 'user.json')

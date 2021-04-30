@@ -1,1 +1,1 @@
-export type userUpdate = { name: string; age: number }
+export type UserUpdate = { name: string; age: number }

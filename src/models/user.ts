@@ -1,32 +1,37 @@
+import { CreateUserType } from './../types/CreateUserType'
 import { UserInfoType } from './../types/userType'
-import { userUpdate } from '../types/userUpdate'
+import { UserUpdate } from '../types/userUpdate'
+import { v4 as uuid } from 'uuid'
 import adapter from '../adapter'
 
 export default class UserService {
-  userAdapter = new adapter('./routes/user', 'user.json')
+  adapter = new adapter('./routes/user', 'user.json')
 
   async init(): Promise<void> {
-    await this.userAdapter.init()
+    await this.adapter.init()
   }
-  async create(data: UserInfoType): Promise<void> {
-    await this.userAdapter.createData(data)
-    await this.userAdapter.getFileContent()
+  async create(data: CreateUserType): Promise<string> {
+    const id = uuid()
+    await this.adapter.createData({ ...data, id })
+    return id
   }
 
   async findAll(): Promise<UserInfoType[] | undefined> {
-    return await this.userAdapter.getFileContent()
+    return await this.adapter.getFileContent()
   }
   async findOne(id: string): Promise<void> {
-    await this.userAdapter.getById(id)
+    await this.adapter.getById(id)
   }
 
   async deleteUserFile(): Promise<void> {
-    await this.userAdapter.deleteFile()
+    await this.adapter.deleteFile()
   }
   async deleteUserById(id: string): Promise<void> {
-    await this.userAdapter.deleteById(id)
+    await this.adapter.deleteById(id)
   }
-  async updateUserById(data: userUpdate, id: string): Promise<void> {
-    await this.userAdapter.updateEntityById(data, id)
+  async updateUserById(data: UserUpdate, id: string): Promise<void> {
+    await this.adapter.updateEntityById(data, id)
   }
 }
+
+export let userService: UserService = new UserService()

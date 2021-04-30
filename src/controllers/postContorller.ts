@@ -1,8 +1,5 @@
-import express from 'express'
-const router = express.Router()
-import { v4 as uuid } from 'uuid'
 import { Request, Response, NextFunction } from 'express'
-import UserService from '../models/user'
+import PostService from '../models/post'
 
 interface RequestBody {
   name: string
@@ -12,14 +9,14 @@ interface RequestBody {
   nameOfFile: string
 }
 
-let user: UserService = new UserService()
+let post: PostService = new PostService()
 
-export const initializeUser = async (
+export const initializePost = async (
   req: Request<{}, {}, RequestBody, {}>,
   res: Response
 ) => {
   try {
-    await user.init()
+    await post.init()
     const { nameOfFile } = req.body
     if (nameOfFile) {
       res.status(200).send({ message: 'Dir/file is already exists' })
@@ -35,8 +32,8 @@ export const createUser = async (
 ) => {
   try {
     const { name, age } = req.body
-    const id = uuid()
-    await user.create({ name, age, id })
+    // const id = uuid()
+    //await post.create({ name, age, id })
     res.status(200).send({ message: `User was successfuly created ` })
   } catch (error) {
     res.status(422).send({ error })
@@ -48,7 +45,7 @@ export const getAllUsers = async (
   res: Response
 ) => {
   try {
-    const users = await user.findAll()
+    const users = await post.findAll()
     res.status(200).send(users)
   } catch (error) {
     res.status(402).send({ error })
@@ -60,7 +57,7 @@ export const deleteUserFile = async (
   res: Response
 ) => {
   try {
-    await user.deleteUserFile()
+    await post.deleteUserFile()
     res.status(200).send({ message: `File  was successfuly deleted` })
   } catch (error) {
     res.status(402).send({ error })
@@ -72,7 +69,7 @@ export const deleteUserById = async (
 ) => {
   try {
     const { id } = req.body
-    await user.deleteUserById(id)
+    await post.deleteUserById(id)
     res.status(200).send({ message: `User  was successfuly deleted` })
   } catch (error) {
     res.status(402).send({ error })
@@ -85,7 +82,7 @@ export const updateUser = async (
 ) => {
   try {
     const { name, age, id } = req.body
-    await user.updateUserById({ name, age }, id)
+    await post.updateUserById({ name, age }, id)
 
     res.status(200).send({ message: `User  was successfuly deleted` })
   } catch (error) {
