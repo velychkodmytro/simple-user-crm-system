@@ -1,1 +1,1 @@
-export type PostInfoType = { name: string; price: number; ownerId: string }
+export type PostInfoType = { name: string; price: number; ownerId: string };
