@@ -35,7 +35,7 @@ export const initializeUser = async (
 export const createUser = async (
     req: Request<EmptyObjectType, EmptyObjectType, UserCreate, EmptyObjectType>,
     res: Response
-) => {
+): Promise<void> => {
     try {
         const { name, age } = req.body;
         await userService.create({ name, age });
@@ -45,7 +45,10 @@ export const createUser = async (
     }
 };
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (
+    req: Request,
+    res: Response
+): Promise<void> => {
     try {
         const users = await userService.findAll();
         res.status(200).send(users);
@@ -56,7 +59,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 export const deleteUserById = async (
     req: Request<EmptyObjectType, EmptyObjectType, UserDelete, EmptyObjectType>,
     res: Response
-) => {
+): Promise<void> => {
     try {
         const { id } = req.body;
         await userService.deleteUserById(id);
@@ -71,10 +74,10 @@ export const deleteUserById = async (
 export const updateUser = async (
     req: Request<EmptyObjectType, EmptyObjectType, UserUpdate, EmptyObjectType>,
     res: Response
-) => {
+): Promise<void> => {
     try {
-        const { name, age, id } = req.body;
-        await userService.updateUserById({ name, age }, id);
+        const { id } = req.body;
+        await userService.updateUserById(req.body);
         res.status(200).send({
             message: `User with id: ${id} was successfuly updated`,
         });

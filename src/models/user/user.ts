@@ -1,6 +1,6 @@
-import { UserInfo, UserCreate } from './interfaces';
-import { UserUpdate } from '../../types/userUpdate';
+import { UserInfo, UserCreate, UserUpdate } from './interfaces';
 import { v4 as uuid } from 'uuid';
+
 import adapter from '../../adapter';
 
 export default class UserService {
@@ -26,8 +26,9 @@ export default class UserService {
     async deleteUserById(id: string): Promise<void> {
         await this.adapter.deleteById(id);
     }
-    async updateUserById(data: UserUpdate, id: string): Promise<void> {
-        await this.adapter.updateEntityById(data, id);
+    async updateUserById(data: UserUpdate): Promise<void> {
+        const { id, ...otherData } = data;
+        await this.adapter.updateEntityById(otherData, id);
     }
 }
 
