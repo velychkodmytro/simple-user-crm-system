@@ -1,6 +1,6 @@
+import { UserInfo } from './models/user/interfaces';
 import { resolve } from 'path';
-import { readFile, writeFile, unlink, access, mkdir } from 'fs/promises';
-import * as interfaces from './interfaces/index';
+import { readFile, writeFile, access, mkdir } from 'fs/promises';
 
 export async function createFolder(path: string): Promise<void> {
     const pathToDIr: string = resolve(path);
@@ -10,6 +10,7 @@ export async function createFolder(path: string): Promise<void> {
     } catch (error) {
         await mkdir(pathToDIr);
         console.log('The dir has been created');
+        const a = '1';
     }
 }
 
@@ -45,26 +46,12 @@ export async function addContentToFile(
 export async function getData(
     path: string,
     fileName: string
-): Promise<interfaces.UserInfo[] | undefined> {
+): Promise<UserInfo[] | undefined> {
     const filePath: string = resolve(path, `${fileName}`);
 
     try {
         const fileContent: string = await readFile(filePath, 'utf-8');
         return JSON.parse(fileContent);
-    } catch (error) {
-        throw new Error(error);
-    }
-}
-
-export async function deleteContent(path: string, fileName: string) {
-    const takePath: string = resolve(path, fileName);
-
-    try {
-        await unlink(takePath);
-        if (!takePath) {
-            console.log('File was deleted');
-        }
-        console.log('File doesnt exists');
     } catch (error) {
         throw new Error(error);
     }

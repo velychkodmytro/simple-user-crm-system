@@ -1,5 +1,4 @@
-import * as interfaces from './interfaces/index';
-import { PostInfoType } from './types/postType';
+import { PostInfo } from './models/post/interfaces';
 import {
     addContentToFile,
     getData,
@@ -7,6 +6,7 @@ import {
     createFile,
 } from './workingWithData';
 import { UserUpdate } from './types/userUpdate';
+import { UserInfo, UserCreate } from './models/user/interfaces';
 
 export default class Adapter {
     private readonly pathToFile: string;
@@ -22,26 +22,22 @@ export default class Adapter {
         await createFile(this.pathToFile, this.fileName);
     }
 
-    async createData(
-        content: interfaces.UserInfo | PostInfoType | interfaces.UserCreate
-    ): Promise<void> {
+    async createData(content: UserInfo | PostInfo | UserCreate): Promise<void> {
         const fileContent = await getData(this.pathToFile, this.fileName);
 
-        if (!fileContent) {
-            return;
-        }
         await addContentToFile(
             this.pathToFile,
             this.fileName,
-            JSON.stringify([...fileContent, content])
+            JSON.stringify([...fileContent!, content])
         );
     }
 
-    getFileContent(): Promise<interfaces.UserInfo[]> {
-        return getData(this.pathToFile, this.fileName);
+    async getFileContent(): Promise<UserInfo[] | undefined> {
+        await getData(this.pathToFile, this.fileName);
+        return;
     }
 
-    async getById(id: string): Promise<interfaces.UserInfo | undefined> {
+    async getById(id: string): Promise<UserInfo | undefined> {
         const fileContent = await getData(this.pathToFile, this.fileName);
         if (!fileContent) {
             return;
@@ -57,12 +53,12 @@ export default class Adapter {
     async updateEntityById(
         newData: UserUpdate,
         id: string
-    ): Promise<interfaces.UserInfo | undefined> {
+    ): Promise<UserInfo | undefined> {
         const fileContent = await getData(this.pathToFile, this.fileName);
         if (!fileContent) {
             return;
         }
-        const newContent = fileContent.map((ent: interfaces.UserInfo) => {
+        const newContent = fileContent.map((ent: UserInfo) => {
             if (ent.id === id) {
                 return {
                     ...newData,
@@ -79,7 +75,7 @@ export default class Adapter {
         return { ...newData, id };
     }
 
-    async deleteById(id: string): Promise<interfaces.UserInfo | undefined> {
+    async deleteById(id: string): Promise<UserInfo | undefined> {
         const fileContent = await getData(this.pathToFile, this.fileName);
         if (!fileContent) {
             return;
