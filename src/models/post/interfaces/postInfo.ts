@@ -1,5 +1,5 @@
 export interface PostInfo {
-    name: string;
-    price: number;
+    title: string;
+    text: string;
     ownerId: string;
 }

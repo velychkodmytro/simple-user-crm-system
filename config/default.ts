@@ -1,6 +1,14 @@
+// import config from 'config';
+
 const config = {
-    // pathToDBFolder: process.env.DB_DATA_FOLDER_PATH,
-    serverPort: Number(process.env.PORT),
+    database: {
+        database: 'user_system',
+        username: 'root',
+        password: 'password',
+        host: 'localhost',
+        dialect: 'mysql',
+        PORT: 3306,
+    },
 };
 
 export default config;

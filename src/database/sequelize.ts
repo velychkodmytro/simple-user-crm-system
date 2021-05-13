@@ -1,10 +1,15 @@
 import { Sequelize } from 'sequelize';
+import config from 'config';
 
-const sequelize = new Sequelize('mysql://localhost:3306/shop', {
-    dialect: 'mysql',
-    username: 'shop',
-    password: '',
-    logging: false,
-});
+const sequelize: Sequelize = new Sequelize(
+    config.get<string>('database.database'),
+    config.get<string>('database.username'),
+    config.get<string>('database.password'),
+    {
+        host: config.get<string>('database.host'),
+        dialect: config.get('database.dialect'),
+        port: config.get<number>('database.port'),
+    }
+);
 
-module.exports = sequelize;
+export default sequelize;

@@ -1,6 +1,7 @@
-import { UserInfo, UserCreate, UserUpdate } from './interfaces';
+import { UserInfo, UserCreate } from './interfaces';
 import { v4 as uuid } from 'uuid';
-
+import { UserUpdate } from './interfaces/userUpdate';
+import { PostInfo } from '../post/interfaces';
 import adapter from '../../adapter';
 
 export default class UserService {
@@ -15,9 +16,9 @@ export default class UserService {
         return id;
     }
 
-    async findAll(): Promise<UserInfo[] | undefined> {
-        await this.adapter.getFileContent();
-        return;
+    async findAll(): Promise<UserInfo[] | PostInfo[]> {
+        const result = await this.adapter.getFileContent();
+        return result;
     }
     async findOne(id: string): Promise<void> {
         await this.adapter.getById(id);
@@ -27,8 +28,8 @@ export default class UserService {
         await this.adapter.deleteById(id);
     }
     async updateUserById(data: UserUpdate): Promise<void> {
-        const { id, ...otherData } = data;
-        await this.adapter.updateEntityById(otherData, id);
+        const { id } = data;
+        await this.adapter.updateEntityById(data, id);
     }
 }
 

@@ -9,9 +9,9 @@ import express from 'express';
 
 const router = express.Router();
 
-router.post('/createUserFile', initializeUser);
-router.post('/createData', createUser);
-router.get('/getAll', getAllUsers);
-router.delete('/deleteUser', deleteUserById);
-router.patch('/updateUser', updateUser);
+router.post('/file', initializeUser);
+router.post('/create', createUser);
+router.get('/all', getAllUsers);
+router.delete('/delete/:id', deleteUserById);
+router.patch('/update/:id', updateUser);
 export default router;

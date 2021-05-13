@@ -10,7 +10,6 @@ export async function createFolder(path: string): Promise<void> {
     } catch (error) {
         await mkdir(pathToDIr);
         console.log('The dir has been created');
-        const a = '1';
     }
 }
 

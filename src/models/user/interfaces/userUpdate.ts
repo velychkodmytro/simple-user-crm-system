@@ -1,5 +1,7 @@
 export interface UserUpdate {
+    id: string;
     name: string;
     age: number;
-    id: string;
+    email: string;
+    password: string;
 }

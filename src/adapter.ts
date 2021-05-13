@@ -1,12 +1,12 @@
-import { PostInfo } from './models/post/interfaces';
+import { PostInfo, PostUpdate } from './models/post/interfaces';
 import {
     addContentToFile,
     getData,
     createFolder,
     createFile,
 } from './workingWithData';
-import { UserUpdate } from './types/userUpdate';
-import { UserInfo, UserCreate } from './models/user/interfaces';
+
+import { UserInfo, UserCreate, UserUpdate } from './models/user/interfaces';
 
 export default class Adapter {
     private readonly pathToFile: string;
@@ -32,12 +32,12 @@ export default class Adapter {
         );
     }
 
-    async getFileContent(): Promise<UserInfo[] | undefined> {
-        await getData(this.pathToFile, this.fileName);
-        return;
+    async getFileContent(): Promise<UserInfo[] | PostInfo[]> {
+        const result = await getData(this.pathToFile, this.fileName);
+        return result;
     }
 
-    async getById(id: string): Promise<UserInfo | undefined> {
+    async getById(id: string): Promise<UserInfo | PostInfo> {
         const fileContent = await getData(this.pathToFile, this.fileName);
         if (!fileContent) {
             return;
@@ -51,9 +51,9 @@ export default class Adapter {
     }
 
     async updateEntityById(
-        newData: UserUpdate,
+        newData: UserUpdate | PostUpdate,
         id: string
-    ): Promise<UserInfo | undefined> {
+    ): Promise<UserInfo | PostUpdate> {
         const fileContent = await getData(this.pathToFile, this.fileName);
         if (!fileContent) {
             return;
@@ -75,7 +75,7 @@ export default class Adapter {
         return { ...newData, id };
     }
 
-    async deleteById(id: string): Promise<UserInfo | undefined> {
+    async deleteById(id: string): Promise<UserInfo | PostInfo> {
         const fileContent = await getData(this.pathToFile, this.fileName);
         if (!fileContent) {
             return;

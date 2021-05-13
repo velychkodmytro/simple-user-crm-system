@@ -1,4 +1,5 @@
-import { userService } from '../user';
+import { UserInfo } from './../../../../dist/models/user/interfaces/userInfo.d';
+import { userService } from '../userService';
 import { Request, Response } from 'express';
 import {
     FileInitialize,
@@ -6,6 +7,7 @@ import {
     UserDelete,
     UserUpdate,
 } from '../interfaces';
+import { PostInfo } from '../../post/interfaces';
 
 type EmptyObjectType = Record<string, never>;
 
@@ -48,10 +50,11 @@ export const createUser = async (
 export const getAllUsers = async (
     req: Request,
     res: Response
-): Promise<void> => {
+): Promise<UserInfo[] | PostInfo[]> => {
     try {
         const users = await userService.findAll();
         res.status(200).send(users);
+        return users;
     } catch (error) {
         res.status(402).send({ error });
     }

@@ -1,44 +1,46 @@
-// import { Request, Response, NextFunction } from 'express'
-// import PostService from '../models/post'
+import { Request, Response, NextFunction } from 'express';
+import PostService from '../postService';
 
-// interface RequestBody {
-//   name: string
-//   age: number
-//   id: string
-//   path: string
-//   nameOfFile: string
-// }
+interface RequestBody {
+    id: string;
+    title: string;
+    text: string;
+    path: string;
+    nameOfFile: string;
+}
 
-// let post: PostService = new PostService()
+let post: PostService = new PostService();
 
-// export const initializePost = async (
-//   req: Request<{}, {}, RequestBody, {}>,
-//   res: Response
-// ) => {
-//   try {
-//     await post.init()
-//     const { nameOfFile } = req.body
-//     if (nameOfFile) {
-//       res.status(200).send({ message: 'Dir/file is already exists' })
-//     }
-//     res.status(200).send({ message: 'Dir/file has been successfuly created' })
-//   } catch (error) {
-//     res.status(422).send({ error })
-//   }
-// }
+export const initializePost = async (
+    req: Request<{}, {}, RequestBody, {}>,
+    res: Response
+) => {
+    try {
+        await post.init();
+        const { nameOfFile } = req.body;
+        if (nameOfFile) {
+            res.status(200).send({ message: 'Dir/file is already exists' });
+        }
+        res.status(200).send({
+            message: 'Dir/file has been successfuly created',
+        });
+    } catch (error) {
+        res.status(422).send({ error });
+    }
+};
 // export const createUser = async (
-//   req: Request<{}, {}, RequestBody, {}>,
-//   res: Response
+//     req: Request<{}, {}, RequestBody, {}>,
+//     res: Response
 // ) => {
-//   try {
-//     const { name, age } = req.body
-//     // const id = uuid()
-//     //await post.create({ name, age, id })
-//     res.status(200).send({ message: `User was successfuly created ` })
-//   } catch (error) {
-//     res.status(422).send({ error })
-//   }
-// }
+//     try {
+//         const { title, text } = req.body;
+//         // const id = uuid()
+//         await post.create({ text, title });
+//         res.status(200).send({ message: `User was successfuly created ` });
+//     } catch (error) {
+//         res.status(422).send({ error });
+//     }
+// };
 
 // export const getAllUsers = async (
 //   req: Request<{}, {}, RequestBody, {}>,
