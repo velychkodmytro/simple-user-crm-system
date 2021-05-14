@@ -5,7 +5,7 @@ import sequilize from './database/sequelize';
 import config from 'config';
 
 const app = express();
-const port = config.get('database.PORT');
+const PORT = config.get('myDatabase.PORT');
 
 app.use(express.json());
 app.use('/user', userRouter);
@@ -16,6 +16,6 @@ const main = async function () {
 };
 main();
 
-app.listen(port, () => {
-    console.log(`Server is up on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server is up on port ${PORT}`);
 });

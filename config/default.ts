@@ -1,14 +1,12 @@
-// import config from 'config';
-
 const config = {
-    database: {
+    myDatabase: {
         database: 'user_system',
-        username: 'root',
+        username: 'admin',
         password: 'password',
         host: 'localhost',
         dialect: 'mysql',
-        PORT: 3306,
+        PORT: 8000,
     },
 };
 
-export default config;
+module.exports = config;
