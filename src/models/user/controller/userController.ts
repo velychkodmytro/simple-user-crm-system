@@ -1,89 +1,64 @@
-import { UserInfo } from './../../../../dist/models/user/interfaces/userInfo.d';
-import { userService } from '../userService';
+import UserService from '../userService';
 import { Request, Response } from 'express';
-import {
-    FileInitialize,
-    UserCreate,
-    UserDelete,
-    UserUpdate,
-} from '../interfaces';
-import { PostInfo } from '../../post/interfaces';
+import UserModel from '../userModel';
 
 type EmptyObjectType = Record<string, never>;
 
-export const initializeUser = async (
-    req: Request<
-        EmptyObjectType,
-        EmptyObjectType,
-        FileInitialize,
-        EmptyObjectType
-    >,
-    res: Response
-): Promise<void> => {
-    try {
-        await userService.init();
-        const { path, nameOfFile } = req.body;
-        if (path || nameOfFile) {
-            res.status(200).send({ message: 'Dir/file is already exists' });
-        }
-        res.status(200).send({
-            message: 'Dir/file has been successfuly created',
-        });
-    } catch (error) {
-        res.status(422).send({ error });
-    }
-};
-
 export const createUser = async (
-    req: Request<EmptyObjectType, EmptyObjectType, UserCreate, EmptyObjectType>,
+    req: Request<EmptyObjectType, EmptyObjectType, UserModel, EmptyObjectType>,
     res: Response
 ): Promise<void> => {
     try {
-        const { name, age } = req.body;
-        await userService.create({ name, age });
-        res.status(200).send({ message: `User was successfuly created ` });
+        res.send(await UserService.userCreate(req.body));
     } catch (error) {
         res.status(422).send({ error });
     }
 };
 
-export const getAllUsers = async (
+export const userGetAll = async (
     req: Request,
     res: Response
-): Promise<UserInfo[] | PostInfo[]> => {
+): Promise<void> => {
     try {
-        const users = await userService.findAll();
-        res.status(200).send(users);
-        return users;
+        res.status(200).send(await UserService.userFindAll());
     } catch (error) {
         res.status(402).send({ error });
     }
 };
-export const deleteUserById = async (
-    req: Request<EmptyObjectType, EmptyObjectType, UserDelete, EmptyObjectType>,
+export const userGetOne = async (
+    req: Request<EmptyObjectType, EmptyObjectType, UserModel, EmptyObjectType>,
     res: Response
 ): Promise<void> => {
     try {
-        const { id } = req.body;
-        await userService.deleteUserById(id);
-        res.status(200).send({
-            message: `User with id: ${id} was successfuly deleted`,
-        });
+        const id = req.params.id;
+        res.status(200).send(await UserService.userFindOne(id));
+    } catch (error) {
+        res.status(402).send({ error });
+    }
+};
+export const userDeleteById = async (
+    req: Request<EmptyObjectType, EmptyObjectType, UserModel, EmptyObjectType>,
+    res: Response
+): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const result = await UserService.userDelete(id);
+
+        res.status(201).send({ result, msg: 'User was deleted' });
     } catch (error) {
         res.status(402).send({ error });
     }
 };
 
-export const updateUser = async (
-    req: Request<EmptyObjectType, EmptyObjectType, UserUpdate, EmptyObjectType>,
+export const userUpdateById = async (
+    req: Request<EmptyObjectType, EmptyObjectType, UserModel, EmptyObjectType>,
     res: Response
 ): Promise<void> => {
     try {
-        const { id } = req.body;
-        await userService.updateUserById(req.body);
-        res.status(200).send({
-            message: `User with id: ${id} was successfuly updated`,
-        });
+        const { id } = req.params;
+        const userBody = req.body;
+        const updatedUser = await UserService.userUpdate(id, userBody);
+        res.json(updatedUser);
     } catch (error) {
         res.status(402).send({ error });
     }

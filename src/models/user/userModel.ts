@@ -8,7 +8,7 @@ class UserModel extends Model {}
 UserModel.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             allowNull: false,
         },
@@ -28,14 +28,11 @@ UserModel.init(
         age: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            validate: {
-                isAge: {
-                    msg: 'Age is not correct',
-                },
-                isNumeric: {
-                    msg: 'Age can be only the integer',
-                },
-            },
+            // validate: {
+            //     isAge: {
+            //         msg: 'Age is not correct',
+            //     },
+            // },
         },
         email: {
             type: DataTypes.STRING,
@@ -59,10 +56,26 @@ UserModel.init(
     {
         sequelize,
         timestamps: true,
-        tableName: 'users',
+        tableName: 'user',
     }
 );
 
-UserModel.hasMany(PostModel, { onDelete: 'cascade', foreignKey: 'ownerId' });
-UserModel.hasMany(FollowerModel, { onDelete: 'cascade', foreignKey: 'userId' });
+UserModel.hasMany(PostModel, {
+    onDelete: 'cascade',
+    foreignKey: 'ownerId',
+});
+PostModel.belongsTo(UserModel, {
+    onDelete: 'cascade',
+    foreignKey: 'ownerId',
+    as: 'author',
+});
+UserModel.hasMany(FollowerModel, {
+    onDelete: 'cascade',
+    foreignKey: 'targetId',
+});
+UserModel.hasMany(FollowerModel, {
+    onDelete: 'cascade',
+    foreignKey: 'followerId',
+});
+
 export default UserModel;

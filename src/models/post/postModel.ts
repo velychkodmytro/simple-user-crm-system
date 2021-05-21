@@ -1,12 +1,12 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../database/sequelize';
-
+import UserModel from '../user/userModel';
 class PostModel extends Model {}
 
 PostModel.init(
     {
         id: {
-            type: DataTypes.STRING,
+            type: DataTypes.UUID,
             primaryKey: true,
             allowNull: false,
         },
@@ -40,8 +40,12 @@ PostModel.init(
     {
         sequelize,
         timestamps: false,
-        tableName: 'posts',
+        tableName: 'post',
     }
 );
 
+// PostModel.belongsTo(UserModel, {
+//     foreignKey: 'user',
+//     onDelete: 'cascade',
+// });
 export default PostModel;

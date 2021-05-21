@@ -1,12 +1,11 @@
-// import * as Postcontroller from '../controllers/postContorller'
-// import express from 'express'
+import * as Postcontroller from '../controller/postContorller';
+import express from 'express';
 
-// const router = express.Router()
+const router = express.Router();
 
-// router.post('/post/createPostFile', Postcontroller.initializePost)
-// //router.post('/post/createData', Postcontroller.createUser)
-// // router.get('/user/getAll', controller.getAllUsers)
-// // router.delete('/user/deleteFile', controller.deleteUserFile)
-// // router.delete('/user/deleteUser', controller.deleteUserById)
-// // router.patch('/user/updateUser', controller.updateUser)
-// export default router
+router.post('/create', Postcontroller.postCreate);
+router.get('/all', Postcontroller.postGetAll);
+router.get('/:id');
+router.delete('/delete/:id', Postcontroller.postDeleteById);
+router.patch('/update/:id', Postcontroller.postUpdate);
+export default router;

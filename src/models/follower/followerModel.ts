@@ -7,7 +7,7 @@ FollowerModel.init(
     {
         id: {
             type: DataTypes.UUID,
-
+            primaryKey: true,
             allowNull: false,
         },
         targetId: {

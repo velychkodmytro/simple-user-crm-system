@@ -1,35 +1,37 @@
-import { UserInfo, UserCreate } from './interfaces';
 import { v4 as uuid } from 'uuid';
-import { UserUpdate } from './interfaces/userUpdate';
-import { PostInfo } from '../post/interfaces';
-import adapter from '../../adapter';
+import UserModel from './userModel';
 
 export default class UserService {
-    adapter = new adapter('./data/user', 'user.json');
-
-    async init(): Promise<void> {
-        await this.adapter.init();
-    }
-    async create(data: UserCreate): Promise<string> {
+    static async userCreate(userData: UserModel): Promise<UserModel> {
         const id = uuid();
-        await this.adapter.createData({ ...data, id });
-        return id;
+        const user = await UserModel.create({ id, ...userData });
+        return user;
     }
 
-    async findAll(): Promise<UserInfo[] | PostInfo[]> {
-        const result = await this.adapter.getFileContent();
+    static async userFindAll(): Promise<UserModel[]> {
+        const result = await UserModel.findAll();
         return result;
     }
-    async findOne(id: string): Promise<void> {
-        await this.adapter.getById(id);
+    static async userFindOne(id: string): Promise<UserModel> {
+        const user = await UserModel.findByPk(id);
+        if (!user) {
+            throw new Error(`User with id ${id} doesn't exist.`);
+        }
+        return user;
     }
 
-    async deleteUserById(id: string): Promise<void> {
-        await this.adapter.deleteById(id);
+    static async userDelete(id: string): Promise<number> {
+        const deletedUser = await UserModel.destroy({ where: { id: id } });
+        return deletedUser;
     }
-    async updateUserById(data: UserUpdate): Promise<void> {
-        const { id } = data;
-        await this.adapter.updateEntityById(data, id);
+    static async userUpdate(
+        id: string,
+        userBody: UserModel
+    ): Promise<[number, UserModel[]]> {
+        const updatedUser = await UserModel.update(userBody, {
+            where: { id: id },
+        });
+        return updatedUser;
     }
 }
 

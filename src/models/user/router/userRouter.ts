@@ -1,17 +1,17 @@
 import {
-    initializeUser,
     createUser,
-    getAllUsers,
-    deleteUserById,
-    updateUser,
+    userGetAll,
+    userGetOne,
+    userDeleteById,
+    userUpdateById,
 } from '../controller/userController';
 import express from 'express';
 
 const router = express.Router();
 
-router.post('/file', initializeUser);
 router.post('/create', createUser);
-router.get('/all', getAllUsers);
-router.delete('/delete/:id', deleteUserById);
-router.patch('/update/:id', updateUser);
+router.get('/all', userGetAll);
+router.get('/:id', userGetOne);
+router.delete('/delete/:id', userDeleteById);
+router.patch('/update/:id', userUpdateById);
 export default router;

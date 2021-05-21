@@ -1,93 +1,74 @@
 import { Request, Response, NextFunction } from 'express';
+import PostModel from '../postModel';
 import PostService from '../postService';
-
 interface RequestBody {
     id: string;
     title: string;
     text: string;
-    path: string;
-    nameOfFile: string;
+    ownerId: string;
 }
+type EmptyObjectType = Record<string, never>;
 
-let post: PostService = new PostService();
-
-export const initializePost = async (
-    req: Request<{}, {}, RequestBody, {}>,
+export const postCreate = async (
+    req: Request<EmptyObjectType, EmptyObjectType, PostModel, EmptyObjectType>,
     res: Response
-) => {
+): Promise<void> => {
     try {
-        await post.init();
-        const { nameOfFile } = req.body;
-        if (nameOfFile) {
-            res.status(200).send({ message: 'Dir/file is already exists' });
-        }
-        res.status(200).send({
-            message: 'Dir/file has been successfuly created',
-        });
+        const { ownerId } = req.params;
+        const result = await PostService.сreate(req.body, ownerId);
+        res.status(201);
+        res.send(result);
     } catch (error) {
         res.status(422).send({ error });
     }
 };
-// export const createUser = async (
-//     req: Request<{}, {}, RequestBody, {}>,
-//     res: Response
-// ) => {
-//     try {
-//         const { title, text } = req.body;
-//         // const id = uuid()
-//         await post.create({ text, title });
-//         res.status(200).send({ message: `User was successfuly created ` });
-//     } catch (error) {
-//         res.status(422).send({ error });
-//     }
-// };
 
-// export const getAllUsers = async (
-//   req: Request<{}, {}, RequestBody, {}>,
-//   res: Response
-// ) => {
-//   try {
-//     const users = await post.findAll()
-//     res.status(200).send(users)
-//   } catch (error) {
-//     res.status(402).send({ error })
-//   }
-// }
+export const postGetAll = async (
+    req: Request<EmptyObjectType, EmptyObjectType, PostModel, EmptyObjectType>,
+    res: Response
+): Promise<void> => {
+    try {
+        const { ownerId } = req.params;
+        res.status(200).send(await PostService.findAllPosts(ownerId));
+    } catch (error) {
+        res.status(402).send({ error });
+    }
+};
+export const postGetOne = async (
+    req: Request<EmptyObjectType, EmptyObjectType, PostModel, EmptyObjectType>,
+    res: Response
+): Promise<void> => {
+    try {
+        const { id } = req.params;
+        res.status(200).send(await PostService.findOne(id));
+    } catch (error) {
+        res.status(402).send({ error });
+    }
+};
 
-// export const deleteUserFile = async (
-//   req: Request<{}, {}, RequestBody, {}>,
-//   res: Response
-// ) => {
-//   try {
-//     await post.deleteUserFile()
-//     res.status(200).send({ message: `File  was successfuly deleted` })
-//   } catch (error) {
-//     res.status(402).send({ error })
-//   }
-// }
-// export const deleteUserById = async (
-//   req: Request<{}, {}, RequestBody, {}>,
-//   res: Response
-// ) => {
-//   try {
-//     const { id } = req.body
-//     await post.deleteUserById(id)
-//     res.status(200).send({ message: `User  was successfuly deleted` })
-//   } catch (error) {
-//     res.status(402).send({ error })
-//   }
-// }
+export const postDeleteById = async (
+    req: Request<EmptyObjectType, EmptyObjectType, PostModel, EmptyObjectType>,
+    res: Response
+): Promise<void> => {
+    try {
+        const { id } = req.params;
 
-// export const updateUser = async (
-//   req: Request<{}, {}, RequestBody, {}>,
-//   res: Response
-// ) => {
-//   try {
-//     const { name, age, id } = req.body
-//     await post.updateUserById({ name, age }, id)
+        res.status(200).send(await PostService.deletePostById(id));
+    } catch (error) {
+        res.status(402).send({ error });
+    }
+};
 
-//     res.status(200).send({ message: `User  was successfuly deleted` })
-//   } catch (error) {
-//     res.status(402).send({ error })
-//   }
-// }
+export const postUpdate = async (
+    req: Request<EmptyObjectType, EmptyObjectType, PostModel, EmptyObjectType>,
+    res: Response
+): Promise<void> => {
+    try {
+        const postBody = req.body;
+        const { id } = req.params;
+        const updatedPost = await PostService.updatePostById(postBody, id);
+        res.status(200).send(updatedPost);
+    } catch (error) {
+        res.status(402).send({ error });
+    }
+};
