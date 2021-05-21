@@ -1,6 +1,6 @@
 'use strict';
-
-export default followerCreateMigration = {
+const { DataTypes } = require('Sequelize');
+const followerCreateMigration = {
     up: async (queryInterface, DataTypes) => {
         return queryInterface.createTable('followers', {
             id: {
@@ -22,3 +22,4 @@ export default followerCreateMigration = {
         return queryInterface.dropTable('followers');
     },
 };
+module.exports = followerCreateMigration;

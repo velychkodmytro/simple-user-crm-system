@@ -1,5 +1,6 @@
 import path from 'path'
 
-export 'config': path.resolve('config', 'default.ts'),
+export 'config': path.resolve('src', 'database', 'config', 'default.ts'),
 export 'models-path': path.resolve('src', 'models'),
 export 'migrations-path': path.resolve('database', 'migrations') 
+

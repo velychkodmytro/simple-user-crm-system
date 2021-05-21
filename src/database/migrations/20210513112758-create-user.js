@@ -1,19 +1,20 @@
 'use strict';
+const { DataTypes } = require('Sequelize');
 
-export default userCreateMigration = {
-    up: async (queryInterface, DataTypes) => {
+const userCreateMigration = {
+    up: async (queryInterface, Sequelize) => {
         return queryInterface.createTable('users', {
             id: {
-                type: DataTypes.UUID,
+                type: Sequelize.DataTypes.UUID,
                 primaryKey: true,
                 defaultValue: DataTypes.UUIDV4,
             },
             username: {
-                type: DataTypes.STRING,
+                type: Sequelize.DataTypes.STRING,
                 allowNull: false,
             },
             age: {
-                type: DataTypes.INTEGER,
+                type: Sequelize.DataTypes.INTEGER,
                 allowNull: false,
                 notEmpty: true,
                 validate: {
@@ -21,7 +22,7 @@ export default userCreateMigration = {
                 },
             },
             email: {
-                type: DataTypes.STRING,
+                type: Sequelize.DataTypes.STRING,
                 allowNull: false,
                 notEmpty: true,
                 validate: {
@@ -29,7 +30,7 @@ export default userCreateMigration = {
                 },
             },
             password: {
-                type: DataTypes.STRING,
+                type: Sequelize.DataTypes.STRING,
                 allowNull: false,
                 notEmpty: true,
                 validate: {
@@ -43,3 +44,5 @@ export default userCreateMigration = {
         return queryInterface.dropTable('users');
     },
 };
+
+module.exports = userCreateMigration;

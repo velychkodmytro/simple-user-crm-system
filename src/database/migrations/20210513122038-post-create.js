@@ -1,6 +1,6 @@
 'use strict';
-
-export default postCreateMigration = {
+const { DataTypes } = require('Sequelize');
+const postCreateMigration = {
     up: async (queryInterface, DataTypes) => {
         return queryInterface.createTable('posts', {
             id: {
@@ -19,6 +19,9 @@ export default postCreateMigration = {
                 allowNull: false,
                 notEmpty: true,
             },
+            // ownerId: {
+
+            // }
         });
     },
 
@@ -26,3 +29,4 @@ export default postCreateMigration = {
         return queryInterface.dropTable('posts');
     },
 };
+module.exports = postCreateMigration;

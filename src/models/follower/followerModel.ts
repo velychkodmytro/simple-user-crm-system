@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../database/sequelize';
+import sequelize from '../../database/config/sequelize';
 
 class FollowerModel extends Model {}
 
@@ -7,7 +7,7 @@ FollowerModel.init(
     {
         id: {
             type: DataTypes.UUID,
-
+            primaryKey: true,
             allowNull: false,
         },
         targetId: {

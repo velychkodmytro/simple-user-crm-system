@@ -1,12 +1,12 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../database/sequelize';
-
+import sequelize from '../../database/config/sequelize';
+import UserModel from '../user/userModel';
 class PostModel extends Model {}
 
 PostModel.init(
     {
         id: {
-            type: DataTypes.STRING,
+            type: DataTypes.UUID,
             primaryKey: true,
             allowNull: false,
         },

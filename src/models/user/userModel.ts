@@ -1,14 +1,30 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../database/sequelize';
+import sequelize from '../../database/config/sequelize';
 import PostModel from '../post/postModel';
 import FollowerModel from '../follower/followerModel';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
-class UserModel extends Model {}
+class UserModel extends Model {
+    password: string;
+
+    static findByCredentials = async (email: string, password: string) => {
+        const user = await UserModel.findOne({ where: { email } });
+        if (!user) {
+            throw new Error('Wrong email');
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            throw new Error('Wrong password');
+        }
+        return user;
+    };
+}
 
 UserModel.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
             allowNull: false,
         },
@@ -28,14 +44,6 @@ UserModel.init(
         age: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            validate: {
-                isAge: {
-                    msg: 'Age is not correct',
-                },
-                isNumeric: {
-                    msg: 'Age can be only the integer',
-                },
-            },
         },
         email: {
             type: DataTypes.STRING,
@@ -57,12 +65,40 @@ UserModel.init(
         },
     },
     {
+        hooks: {
+            beforeCreate: async (user) => {
+                const salt = await bcrypt.genSalt(10);
+                user.password = await bcrypt.hash(user.password, salt);
+            },
+        },
         sequelize,
-        timestamps: true,
+        timestamps: false,
         tableName: 'users',
     }
 );
 
-UserModel.hasMany(PostModel, { onDelete: 'cascade', foreignKey: 'ownerId' });
-UserModel.hasMany(FollowerModel, { onDelete: 'cascade', foreignKey: 'userId' });
+// UserModel.generateAuthToken = async function (userId) {
+//     const token = jwt.sign({ id: userId }, 'thisismynewtoken');
+//     return token;
+// };
+
+UserModel.hasMany(PostModel, {
+    onDelete: 'cascade',
+    foreignKey: 'ownerId',
+});
+UserModel.hasMany(FollowerModel, {
+    onDelete: 'cascade',
+    foreignKey: 'targetId',
+});
+UserModel.hasMany(FollowerModel, {
+    onDelete: 'cascade',
+    foreignKey: 'followerId',
+});
+
+PostModel.belongsTo(UserModel, {
+    onDelete: 'cascade',
+    foreignKey: 'ownerId',
+    as: 'author',
+});
+
 export default UserModel;

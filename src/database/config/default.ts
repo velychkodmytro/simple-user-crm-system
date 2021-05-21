@@ -5,7 +5,11 @@ const config = {
         password: 'password',
         host: 'localhost',
         dialect: 'mysql',
-        PORT: 8000,
+        port: 3306,
+    },
+
+    api: {
+        port: 8000,
     },
 };
 

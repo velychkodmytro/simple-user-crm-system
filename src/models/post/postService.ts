@@ -1,31 +1,47 @@
-import { v4 as uuidv4 } from 'uuid';
-import { PostInfo, PostUpdate } from './interfaces';
-import { UserInfo } from '../user/interfaces/index';
-import adapter from '../../adapter';
+import PostModel from './postModel';
+import UserModel from '../user/userModel';
+import UserService from '../user/userService';
+import { v4 as uuid } from 'uuid';
 
 export default class PostService {
-    postAdapter = new adapter('./data/post', 'post.json');
-
-    async init(): Promise<void> {
-        await this.postAdapter.init();
+    static async сreate(
+        postData: PostModel,
+        ownerId: string
+    ): Promise<PostModel> {
+        const id = uuid();
+        const owner = await UserService.userFindOne(ownerId);
+        const post = await PostModel.create({
+            id,
+            ...postData,
+            ownerId: owner,
+        });
+        return post;
     }
-    async create(data: PostInfo): Promise<void> {
-        await this.postAdapter.createData(data);
-    }
 
-    //Спросить как избежать интерфейса юзера в этом методе
-    async findAll(): Promise<PostInfo[] | UserInfo[]> {
-        const result = await this.postAdapter.getFileContent();
+    static async findAllPosts(
+        ownerId: string
+    ): Promise<UserModel[] | PostModel[]> {
+        const owner = await UserModel.findByPk(ownerId);
+        const result = await PostModel.findAll({ where: { owner: ownerId } });
         return result;
     }
-    async findOne(id: string): Promise<void> {
-        await this.postAdapter.getById(id);
+    static async findOne(id: string): Promise<PostModel> {
+        const post = await PostModel.findByPk(id);
+        if (!post) {
+            throw new Error(`Post with id ${id} doesn't exist.`);
+        }
+        return post;
     }
 
-    async deletePostById(id: string): Promise<void> {
-        await this.postAdapter.deleteById(id);
+    static async deletePostById(id: string): Promise<number> {
+        const deletedPost = await PostModel.destroy({ where: { id: id } });
+        return deletedPost;
     }
-    async updatePostById(data: PostUpdate, id: string): Promise<void> {
-        await this.postAdapter.updateEntityById(data, id);
+    static async updatePostById(
+        data: PostModel,
+        id: string
+    ): Promise<[number, PostModel[]]> {
+        const updetedPost = await PostModel.update(data, { where: { id: id } });
+        return updetedPost;
     }
 }
