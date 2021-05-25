@@ -1,5 +1,4 @@
 'use strict';
-const { DataTypes } = require('Sequelize');
 
 const userCreateMigration = {
     up: async (queryInterface, Sequelize) => {
@@ -7,7 +6,7 @@ const userCreateMigration = {
             id: {
                 type: Sequelize.DataTypes.UUID,
                 primaryKey: true,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: Sequelize.DataTypes.UUIDV4,
             },
             username: {
                 type: Sequelize.DataTypes.STRING,

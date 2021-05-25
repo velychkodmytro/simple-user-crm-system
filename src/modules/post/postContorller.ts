@@ -1,12 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import PostModel from './postModel';
 import PostService from './postService';
-interface RequestBody {
-    id: string;
-    title: string;
-    text: string;
-    ownerId: string;
-}
+
 type EmptyObjectType = Record<string, never>;
 
 export const postCreate = async (
@@ -14,8 +9,7 @@ export const postCreate = async (
     res: Response
 ): Promise<void> => {
     try {
-        const { ownerId } = req.params;
-        const result = await PostService.сreate(req.body, ownerId);
+        const result = await PostService.сreate(req.body);
         res.status(201);
         res.send(result);
     } catch (error) {
@@ -28,12 +22,13 @@ export const postGetAll = async (
     res: Response
 ): Promise<void> => {
     try {
-        const { ownerId } = req.params;
-        res.status(200).send(await PostService.findAllPosts(ownerId));
+        const result = await PostService.findAllPosts();
+        res.status(200).send(result);
     } catch (error) {
         res.status(402).send({ error });
     }
 };
+
 export const postGetOne = async (
     req: Request<EmptyObjectType, EmptyObjectType, PostModel, EmptyObjectType>,
     res: Response
@@ -52,8 +47,8 @@ export const postDeleteById = async (
 ): Promise<void> => {
     try {
         const { id } = req.params;
-
-        res.status(200).send(await PostService.deletePostById(id));
+        const result = await PostService.deletePostById(id);
+        res.status(200).send(result);
     } catch (error) {
         res.status(402).send({ error });
     }

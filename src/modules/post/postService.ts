@@ -1,28 +1,24 @@
 import PostModel from './postModel';
 import UserModel from '../user/userModel';
 import UserService from '../user/userService';
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid, v4 } from 'uuid';
 
 export default class PostService {
-    static async сreate(
-        postData: PostModel,
-        ownerId: string
-    ): Promise<PostModel> {
-        const id = uuid();
-        const owner = await UserService.userFindOne(ownerId);
-        const post = await PostModel.create({
-            id,
-            ...postData,
-            ownerId: owner,
-        });
-        return post;
+    static async сreate(postData: PostModel): Promise<PostModel> {
+        try {
+            const id = uuid();
+            const post = await PostModel.create({
+                id,
+                ...postData,
+            });
+            return post;
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    static async findAllPosts(
-        ownerId: string
-    ): Promise<UserModel[] | PostModel[]> {
-        const owner = await UserModel.findByPk(ownerId);
-        const result = await PostModel.findAll({ where: { owner: ownerId } });
+    static async findAllPosts(): Promise<PostModel[]> {
+        const result = await PostModel.findAll();
         return result;
     }
     static async findOne(id: string): Promise<PostModel> {

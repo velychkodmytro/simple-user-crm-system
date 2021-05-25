@@ -1,27 +1,34 @@
 'use strict';
-const { DataTypes } = require('Sequelize');
+
 const postCreateMigration = {
-    up: async (queryInterface, DataTypes) => {
+    up: async (queryInterface, Sequelize) => {
         return queryInterface.createTable('posts', {
             id: {
-                type: DataTypes.UUID,
+                type: Sequelize.DataTypes.UUID,
+
                 allowNull: false,
                 primaryKey: true,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: Sequelize.UUIDV4,
             },
             title: {
-                type: DataTypes.STRING,
+                type: Sequelize.DataTypes.STRING,
                 allowNull: false,
                 notEmpty: true,
             },
             text: {
-                type: DataTypes.TEXT,
+                type: Sequelize.DataTypes.TEXT,
                 allowNull: false,
                 notEmpty: true,
             },
-            // ownerId: {
-
-            // }
+            ownerId: {
+                type: Sequelize.DataTypes.UUID,
+                onDelete: 'cascade',
+                references: {
+                    model: 'users',
+                    key: 'id',
+                    as: 'ownerId',
+                },
+            },
         });
     },
 

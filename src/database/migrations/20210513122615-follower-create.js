@@ -1,18 +1,32 @@
 'use strict';
-const { DataTypes } = require('Sequelize');
+
 const followerCreateMigration = {
-    up: async (queryInterface, DataTypes) => {
+    up: async (queryInterface, Sequelize) => {
         return queryInterface.createTable('followers', {
             id: {
-                type: DataTypes.UUID,
+                type: Sequelize.DataTypes.UUID,
                 allowNull: false,
             },
-            target: {
-                type: DataTypes.UUID,
-                allowNull: false,
+            followerId: {
+                type: Sequelize.DataTypes.UUID,
+                onDelete: 'cascade',
+                references: {
+                    model: 'users',
+                    key: 'id',
+                    as: 'followerId',
+                },
+            },
+            targetId: {
+                type: Sequelize.DataTypes.UUID,
+                onDelete: 'cascade',
+                references: {
+                    model: 'users',
+                    key: 'id',
+                    as: 'targetId',
+                },
             },
             status: {
-                type: DataTypes.ENUM,
+                type: Sequelize.DataTypes.ENUM,
                 values: ['pending', 'following', 'rejected'],
             },
         });

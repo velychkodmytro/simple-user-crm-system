@@ -8,6 +8,11 @@ import jwt from 'jsonwebtoken';
 class UserModel extends Model {
     password: string;
 
+    static generateAuthToken = (userId: string): string => {
+        const token = jwt.sign({ id: userId }, 'thisismynewtoken');
+        return token;
+    };
+
     static findByCredentials = async (email: string, password: string) => {
         const user = await UserModel.findOne({ where: { email } });
         if (!user) {
@@ -76,11 +81,6 @@ UserModel.init(
         tableName: 'users',
     }
 );
-
-// UserModel.generateAuthToken = async function (userId) {
-//     const token = jwt.sign({ id: userId }, 'thisismynewtoken');
-//     return token;
-// };
 
 UserModel.hasMany(PostModel, {
     onDelete: 'cascade',
