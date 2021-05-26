@@ -1,6 +1,6 @@
-import { SSL_OP_NETSCAPE_CHALLENGE_BUG } from 'node:constants';
 import { v4 as uuid } from 'uuid';
 import UserModel from './userModel';
+import SessionSchema from '../auth/authShema';
 
 export default class UserService {
     static async userCreate(userData: UserModel): Promise<UserModel> {

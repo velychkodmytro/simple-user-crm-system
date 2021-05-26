@@ -1,7 +1,7 @@
 import express from 'express';
 import userRouter from './modules/user/userRouter';
 import postRouter from './modules/post/postRouter';
-import sequelize from './database/config/sequelize';
+import sequelize from './database/sequelize';
 import config from 'config';
 
 const app = express();

@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../database/config/sequelize';
+import sequelize from '../../database/sequelize';
 import PostModel from '../post/postModel';
 import FollowerModel from '../follower/followerModel';
 import bcrypt from 'bcryptjs';
@@ -8,10 +8,10 @@ import jwt from 'jsonwebtoken';
 class UserModel extends Model {
     password: string;
 
-    static generateAuthToken = (userId: string): string => {
-        const token = jwt.sign({ id: userId }, 'thisismynewtoken');
-        return token;
-    };
+    // static generateAuthToken = (userId: string): string => {
+    //     const token = jwt.sign({ id: userId }, 'thisismynewtoken');
+    //     return token;
+    // };
 
     static findByCredentials = async (email: string, password: string) => {
         const user = await UserModel.findOne({ where: { email } });
