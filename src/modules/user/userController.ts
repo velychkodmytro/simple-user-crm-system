@@ -4,13 +4,30 @@ import UserModel from './userModel';
 
 type EmptyObjectType = Record<string, never>;
 
-export const createUser = async (
+interface UserLogin {
+    email: string;
+    password: string;
+}
+export const userRegister = async (
     req: Request<EmptyObjectType, EmptyObjectType, UserModel, EmptyObjectType>,
     res: Response
 ): Promise<void> => {
     try {
         const result = await UserService.userCreate(req.body);
         res.status(201).send(result);
+    } catch (error) {
+        res.status(422).send({ error });
+    }
+};
+export const userLogin = async (
+    req: Request<EmptyObjectType, EmptyObjectType, UserLogin, EmptyObjectType>,
+    res: Response
+): Promise<void> => {
+    try {
+        const { email, password } = req.body;
+        const user = await UserService.userSignIn(email, password);
+        console.log(user);
+        res.status(200).send(user);
     } catch (error) {
         res.status(422).send({ error });
     }
@@ -33,6 +50,17 @@ export const userGetOne = async (
     try {
         const id = req.params.id;
         res.status(200).send(await UserService.userFindOne(id));
+    } catch (error) {
+        res.status(402).send({ error });
+    }
+};
+export const userDeleteAll = async (
+    req: Request<EmptyObjectType, EmptyObjectType, UserModel, EmptyObjectType>,
+    res: Response
+): Promise<void> => {
+    try {
+        const result = await UserService.userDeleteAll();
+        res.status(201).send({ result, msg: 'Users was deleted' });
     } catch (error) {
         res.status(402).send({ error });
     }

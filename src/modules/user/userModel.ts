@@ -8,20 +8,29 @@ import jwt from 'jsonwebtoken';
 class UserModel extends Model {
     password: string;
 
-    // static generateAuthToken = (userId: string): string => {
-    //     const token = jwt.sign({ id: userId }, 'thisismynewtoken');
-    //     return token;
-    // };
+    static generateAuthToken = async (userId: string): Promise<string> => {
+        try {
+            const token = jwt.sign({ id: userId }, 'thisismynewtoken', {
+                expiresIn: '60 min',
+            });
+            console.log(token);
+            return token;
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     static findByCredentials = async (email: string, password: string) => {
         const user = await UserModel.findOne({ where: { email } });
         if (!user) {
             throw new Error('Wrong email');
         }
+        console.log(user);
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             throw new Error('Wrong password');
         }
+        console.log(user);
         return user;
     };
 }
@@ -54,7 +63,7 @@ UserModel.init(
             type: DataTypes.STRING,
             validate: {
                 isEmail: {
-                    msg: 'Check and write your email correctly, please',
+                    msg: 'The email must be a valid email',
                 },
             },
         },
@@ -73,6 +82,7 @@ UserModel.init(
         hooks: {
             beforeCreate: async (user) => {
                 const salt = await bcrypt.genSalt(10);
+                console.log(user);
                 user.password = await bcrypt.hash(user.password, salt);
             },
         },

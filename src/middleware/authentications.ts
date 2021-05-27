@@ -15,7 +15,7 @@ const authentication = async (
         });
 
         if (!user) {
-            throw new Error('Dont find user');
+            throw new Error('Didnt find user');
         }
 
         (req as any).user = user;

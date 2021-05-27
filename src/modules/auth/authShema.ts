@@ -1,10 +1,15 @@
-import mongoose from 'mongoose';
+import { Document, Model, model, Types, Schema, Query } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import UserModel from '../user/userModel';
 import bcrypt from 'bcryptjs';
 
-const SessionSchema = new mongoose.Schema({
+const SessionSchema = new Schema({
     refreshToken: {
+        type: String,
+        required: true,
+        default: '',
+    },
+    accessToken: {
         type: String,
         required: true,
         default: '',
@@ -16,8 +21,11 @@ const SessionSchema = new mongoose.Schema({
     },
 });
 
-SessionSchema.statics.generateAuthToken = async (userId: string): string => {
-    const token = jwt.sign({ _id: userId }, 'thisismynewtoken');
+SessionSchema.methods.generateAuthToken = (userId: string): string => {
+    const token = jwt.sign({ _id: userId }, 'thisismynewtoken', {
+        expiresIn: '15 min',
+    });
+
     return token;
 };
 

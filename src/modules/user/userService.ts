@@ -3,11 +3,31 @@ import UserModel from './userModel';
 import SessionSchema from '../auth/authShema';
 
 export default class UserService {
-    static async userCreate(userData: UserModel): Promise<UserModel> {
+    static async userCreate(
+        userData: UserModel
+    ): Promise<Record<string, UserModel | string>> {
         try {
             const id = uuid();
             const user = await UserModel.create({ id, ...userData });
-            return user;
+            const token = await UserModel.generateAuthToken((user as any).id);
+            return { user, token };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    static async userSignIn(
+        email: string,
+        password: string
+    ): Promise<Record<string, UserModel | string>> {
+        try {
+            const user = await UserModel.findByCredentials(email, password);
+            const token = await UserModel.generateAuthToken((user as any).id);
+
+            console.log(`User: ${user}`);
+            console.log(`Token: ${token}`);
+
+            return { token, user };
         } catch (error) {
             console.log(error);
         }
@@ -28,6 +48,9 @@ export default class UserService {
     static async userDelete(id: string): Promise<number> {
         const deletedUser = await UserModel.destroy({ where: { id: id } });
         return deletedUser;
+    }
+    static async userDeleteAll(): Promise<void> {
+        await UserModel.destroy({ where: {} });
     }
     static async userUpdate(
         id: string,
